@@ -1,5 +1,5 @@
 import hashlib
-from src.encryption_util import get_org_key, sys_keys
+from src.encryption_util import sys_keys
 from cryptography.fernet import Fernet
 from logger_util import get_logger
 
@@ -28,16 +28,16 @@ def decrypt_data(key, enc_data) -> str:
     return r
 
 
-def encrypt_data_org(org_id: int, data) -> str:
-    if data:
-        return encrypt_data(get_org_key(org_id).key, data)
-    return data
-
-
-def decrypt_data_org(org_id: int, enc_data) -> str:
-    if enc_data:
-        return decrypt_data(get_org_key(org_id).key, enc_data)
-    return enc_data
+# def encrypt_data_org(org_id: int, data) -> str:
+#     if data:
+#         return encrypt_data(get_org_key(org_id).key, data)
+#     return data
+#
+#
+# def decrypt_data_org(org_id: int, enc_data) -> str:
+#     if enc_data:
+#         return decrypt_data(get_org_key(org_id).key, enc_data)
+#     return enc_data
 
 
 def encrypt_data_sys(data) -> str:

@@ -1,8 +1,5 @@
-import json
-import os
 import settings
 from datetime import datetime
-from cryptography.fernet import Fernet, MultiFernet
 import requests
 from logger_util import get_logger
 
@@ -30,14 +27,7 @@ def get_key_from_server(key_id):
 
 def get_sys_key():
     try:
-        if settings.is_local_env():
-            file_path = os.path.join(os.getcwd(),settings.UPLOAD_FOLDER,'keys.json')
-            f = open(file_path, "r")
-            org_keys: dict = json.loads(f.read())
-            f.close()
-            return OrgKey(0, org_keys["0"])
-        else:
-            return get_key_from_server(0)
+        return OrgKey(0, settings.SYS_SECRET_KEY)
     except Exception as ex:
         log.exception(ex)
         return None
@@ -45,42 +35,42 @@ def get_sys_key():
 
 sys_keys: OrgKey = get_sys_key()
 
-
-def get_org_key_from_server(org_id):
-    try:
-        org_id = str(org_id)
-        if settings.is_local_env():
-            file_path = f"{os.getcwd()}/{settings.UPLOAD_FOLDER}/keys.json"
-            f = open(file_path, "r")
-            all_org_keys: dict = json.loads(f.read())
-            f.close()
-            if org_id not in all_org_keys.keys():
-                all_org_keys[org_id] = Fernet.generate_key().decode()
-                f = open(file_path, "w")
-                f.write(json.dumps(all_org_keys))
-                f.close()
-            return OrgKey(org_id, all_org_keys[org_id])
-        else:
-            return get_key_from_server(org_id)
-    except Exception as ex:
-        log.exception(ex)
-        return None
-
-
-def get_org_key(org_id):
-    try:
-        global org_keys
-        if org_id not in org_keys.keys():
-            org_keys[org_id] = get_org_key_from_server(org_id)
-        return org_keys[org_id]
-    except Exception as ex:
-        log.exception(ex)
-        return None
-
-
-def load_all_keys():
-    from src.db_layer.sql_models.organization import Organizations
-    for org in Organizations.query.filter(Organizations.id > 0).all():
-        get_org_key(org.id)
-
-    sys_keys: OrgKey = get_sys_key()
+#
+# def get_org_key_from_server(org_id):
+#     try:
+#         org_id = str(org_id)
+#         if settings.is_local_env():
+#             file_path = f"{os.getcwd()}/{settings.UPLOAD_FOLDER}/keys.json"
+#             f = open(file_path, "r")
+#             all_org_keys: dict = json.loads(f.read())
+#             f.close()
+#             if org_id not in all_org_keys.keys():
+#                 all_org_keys[org_id] = Fernet.generate_key().decode()
+#                 f = open(file_path, "w")
+#                 f.write(json.dumps(all_org_keys))
+#                 f.close()
+#             return OrgKey(org_id, all_org_keys[org_id])
+#         else:
+#             return get_key_from_server(org_id)
+#     except Exception as ex:
+#         log.exception(ex)
+#         return None
+#
+#
+# def get_org_key(org_id):
+#     try:
+#         global org_keys
+#         if org_id not in org_keys.keys():
+#             org_keys[org_id] = get_org_key_from_server(org_id)
+#         return org_keys[org_id]
+#     except Exception as ex:
+#         log.exception(ex)
+#         return None
+#
+#
+# def load_all_keys():
+#     from src.db_layer.sql_models.organization import Organizations
+#     for org in Organizations.query.filter(Organizations.id > 0).all():
+#         get_org_key(org.id)
+#
+#     sys_keys: OrgKey = get_sys_key()

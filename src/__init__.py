@@ -47,5 +47,5 @@ bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 from .db import *
-# from src.api.account.route import acc_mng_blueprint
-# app.register_blueprint(acc_mng_blueprint)
+from src.api.user import user_blueprint
+app.register_blueprint(user_blueprint)
