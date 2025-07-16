@@ -94,6 +94,7 @@ secrets.env
 
 # Temporary files
 temp/
+log/
 *.tmp
 *.bak
 *.swp
