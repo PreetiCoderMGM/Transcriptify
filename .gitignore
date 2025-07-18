@@ -94,6 +94,7 @@ secrets.env
 
 # Temporary files
 temp/
+migrations/
 log/
 *.tmp
 *.bak
