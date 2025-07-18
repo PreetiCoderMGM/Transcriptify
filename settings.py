@@ -1,19 +1,41 @@
+import json
 from logger_util import get_logger
 
 log = get_logger(__name__)
 
-APP_NAME = "transcriptify"
-SECRET_KEY = "88726fd2b17ab8f0cb2dbghb1901bfaefe63800518a9d069"
-FLASK_SERVER_PORT: int = 8000
-UPLOAD_FOLDER = "/log"
-DB_BASE_URL = "mysql+mysqlconnector://root:root@localhost:3306/"
-DB_NAME: str = "transcriptify"
-ENV: str = "local"
+
+def get_config_dict() -> dict:
+    template_config: dict = json.load(open('config.json'))
+    env_config: dict = json.load(open('config_env.json'))
+    for k in template_config.keys():
+        try:
+            a = env_config[k]
+        except KeyError:
+            log.error(f'********** CONFIG MISMATCH **********\n {k} not found in config_env.json')
+            raise Exception(f'********** CONFIG MISMATCH **********\n {k} not found in config_env.json')
+    for k in env_config.keys():
+        try:
+            a = template_config[k]
+        except KeyError:
+            log.error(f'********** CONFIG MISMATCH **********\n {k} not found in config.json')
+            raise Exception(f'********** CONFIG MISMATCH **********\n {k} not found in config.json')
+    return env_config
+
+
+config = get_config_dict()
+
+APP_NAME = config['APP_NAME']
+SECRET_KEY = config['SECRET_KEY']
+FLASK_SERVER_PORT = config['FLASK_SERVER_PORT']
+UPLOAD_FOLDER = config['UPLOAD_FOLDER']
+DB_BASE_URL = config['DB_BASE_URL']
+DB_NAME = config['DB_NAME']
+ENV = config['ENV']
+SYS_SECRET_KEY = config['SYS_SECRET_KEY']
 VIDEO_MEDIA_TYPE: [str] = ["mp4"]
 AUDIO_MEDIA_TYPE: [str] = ["mp3"]
 DEEPGRAM_TOKEN: str = ""
 MEDIA_CACHE_SEC: int = 3600
-SYS_SECRET_KEY = b'Stfbwg52_XCI7C1YyTr--7JdQ5LY49Q92yQCo2fK5kg='
 SUPPORTED_MEDIA_TYPE = VIDEO_MEDIA_TYPE + AUDIO_MEDIA_TYPE
 # OPENAI_API_KEY: str = config['OPENAI_API_KEY']
 # GEMINI_API_KEY: str = config['GEMINI_API_KEY']

@@ -3,7 +3,8 @@ import enum
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.exc import StatementError
 from logger_util import get_logger
-from src import db, app
+from src import db, app, bcrypt
+from src.common_utils import get_hashed_password
 from src.encryption import encrypt_data_sys, hash_data, decrypt_data_sys
 import jwt
 import urllib.parse
@@ -22,31 +23,25 @@ class User(db.Model):
     id = db.Column(db.BigInteger, primary_key=True, autoincrement=True)
     email = db.Column(db.String(255), nullable=False)
     email_h = db.Column(db.String(200), index=True)
-    first_name = db.Column(db.String(200), nullable=False, default='')
-    last_name = db.Column(db.String(200), nullable=False, default='')
+    name = db.Column(db.String(200), nullable=False, default='')
+    password = db.Column(db.String(255), nullable=False)
+    last_login = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())
     created_on = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())
 
-    def __init__(self, email, first_name=None, last_name=None, **kwargs):
+    def __init__(self, email, name, password, **kwargs):
         super(User, self).__init__(**kwargs)
 
         self.email = encrypt_data_sys(email)
         self.email_h = hash_data(email)
         self.created_on = datetime.datetime.now()
-        self.first_name = encrypt_data_sys(first_name) if first_name else encrypt_data_sys('NA')
-        self.last_name = encrypt_data_sys(last_name) if last_name else encrypt_data_sys('NA')
+        self.name = encrypt_data_sys(name) if name else encrypt_data_sys('NA')
+        self.password = get_hashed_password(password)
 
-    def get_first_name(self):
-        return decrypt_data_sys(self.first_name)
+    def get_name(self):
+        return decrypt_data_sys(self.name)
 
-    def set_first_name(self, first_name):
-        self.first_name = encrypt_data_sys(first_name)
-        self.set_hash_str()
-
-    def get_last_name(self):
-        return decrypt_data_sys(self.last_name)
-
-    def set_last_name(self, last_name):
-        self.last_name = encrypt_data_sys(last_name)
+    def set_name(self, name):
+        self.name = encrypt_data_sys(name)
         self.set_hash_str()
 
     def get_email(self):
@@ -54,7 +49,7 @@ class User(db.Model):
 
     @property
     def full_name(self):
-        return '{} {}'.format(decrypt_data_sys(self.first_name), decrypt_data_sys(self.last_name))
+        return decrypt_data_sys(self.name)
 
     @staticmethod
     def get_by_email(email: str):
@@ -121,3 +116,15 @@ class User(db.Model):
         except Exception as ex:
             log.exception(ex)
             return ex
+
+    def reset_password(self, new_plan_pass: str) -> bool:
+        """Verify the new password for this user."""
+        self.password = get_hashed_password(new_plan_pass)
+        db.session.add(self)
+        db.session.commit()
+        return True
+
+    def is_password_matched(self, plan_password) -> bool:
+        if bcrypt.check_password_hash(self.password, plan_password):
+            return True
+        return False

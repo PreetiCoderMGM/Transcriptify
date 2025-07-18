@@ -62,7 +62,7 @@ migrations/versions/
 # Logs
 *.log
 logs/
-
+config_env.json
 # MyPy, Pylint, etc.
 .mypy_cache/
 .dmypy.json
