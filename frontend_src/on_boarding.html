@@ -130,7 +130,7 @@
   }
 
   async function handleSignup() {
-    const full_name = document.getElementById('signupName').value;
+    const name = document.getElementById('signupName').value;
     const email = document.getElementById('signupEmail').value;
     const password = document.getElementById('signupPassword').value;
 
@@ -138,7 +138,7 @@
       const res = await fetch(`${BASE_URL}/user/sign_up`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ full_name, email, password })
+        body: JSON.stringify({ name, email, password })
       });
 
       const data = await res.json();
