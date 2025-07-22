@@ -11,12 +11,6 @@ import urllib.parse
 log = get_logger(__name__)
 
 
-class FountSize(enum.Enum):
-    Small = "Small"
-    Medium = "Medium"
-    Large = "Large"
-
-
 class User(db.Model):
     """ User Model for storing user related details """
     __tablename__ = "users"
