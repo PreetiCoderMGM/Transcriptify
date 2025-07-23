@@ -14,7 +14,7 @@ log = get_logger(__name__)
 user_blueprint = Blueprint("user_blueprint", __name__)
 
 
-@user_blueprint.route("/user/sign_up", methods=['POST'])
+@user_blueprint.route("/api/user/sign_up", methods=['POST'])
 def sign_up():
     req_id: str = get_uid()
     try:
@@ -44,7 +44,7 @@ def sign_up():
         return jsonify({"success": False, "message": "Internal server error.", "request_id": req_id}), 500
 
 
-@user_blueprint.route("/user/login", methods=['POST'])
+@user_blueprint.route("/api/user/login", methods=['POST'])
 def login():
     req_id: str = get_uid()
     try:
@@ -79,6 +79,11 @@ def login():
         return jsonify({"success": False, "message": "Internal server error.", "request_id": req_id}), 500
 
 
-@user_blueprint.route("/on_boarding", methods=["GET"])
-def front_end_on_boarding():
-    return render_template("on_boarding.html")
+@user_blueprint.route("/signup", methods=["GET"])
+def front_end_signup():
+    return render_template("signup.html")
+
+
+@user_blueprint.route("/login", methods=["GET"])
+def front_end_login():
+    return render_template("login.html")

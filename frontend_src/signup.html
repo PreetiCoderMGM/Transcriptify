@@ -2,11 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Transcriptify - Login / Signup</title>
+  <title>Transcriptify - Sign Up</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', sans-serif;
       background: #98b7d5;
@@ -17,7 +15,6 @@
       height: 100vh;
       justify-content: flex-start;
     }
-
     .title-section {
       height: 25vh;
       width: 100%;
@@ -26,13 +23,11 @@
       align-items: center;
       justify-content: center;
     }
-
     .project-title {
       font-size: 3em;
       font-weight: bold;
       color: #002147;
     }
-
     .container {
       background: white;
       padding: 30px;
@@ -42,18 +37,15 @@
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       margin-top: 20px;
     }
-
     h2 {
       text-align: center;
       margin-bottom: 20px;
       color: #002147;
     }
-
     .input-group {
       position: relative;
       margin-bottom: 15px;
     }
-
     input {
       width: 100%;
       padding: 10px 40px 10px 10px;
@@ -61,7 +53,6 @@
       border-radius: 5px;
       font-size: 14px;
     }
-
     .eye-icon {
       position: absolute;
       right: 10px;
@@ -72,7 +63,6 @@
       height: 20px;
       fill: #666;
     }
-
     button {
       width: 100%;
       padding: 10px;
@@ -83,78 +73,51 @@
       font-size: 16px;
       cursor: pointer;
     }
-
     button:hover {
       background-color: #001b39;
     }
-
     .toggle-link {
       text-align: center;
       color: #007bff;
       margin-top: 15px;
-      cursor: pointer;
       font-size: 14px;
     }
-
-    .hidden {
-      display: none;
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
 
-<!-- Project Title Section -->
 <div class="title-section">
   <div class="project-title">Transcriptify</div>
 </div>
 
-<!-- Main Form Container -->
 <div class="container">
-  <!-- Signup Form -->
-  <div id="signupForm">
-    <h2>Sign Up</h2>
-    <div class="input-group">
-      <input type="text" id="signupName" placeholder="Full Name">
-    </div>
-    <div class="input-group">
-      <input type="email" id="signupEmail" placeholder="Email">
-    </div>
-    <div class="input-group">
-      <input type="password" id="signupPassword" placeholder="Password">
-      <svg onclick="togglePassword('signupPassword', this)" class="eye-icon" viewBox="0 0 24 24">
-        <path d="M12 4.5C7 4.5 2.7 8.2 1 12c1.7 3.8 6 7.5 11 7.5s9.3-3.7 11-7.5c-1.7-3.8-6-7.5-11-7.5zm0 13c-3.3 0-6-2.7-6-6s2.7-6 6-6
-                 6 2.7 6 6-2.7 6-6 6zm0-10a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/>
-      </svg>
-    </div>
-    <button onclick="handleSignup()">Sign Up</button>
-    <div class="toggle-link" onclick="toggleForm()">Already have an account? Login</div>
+  <h2>Sign Up</h2>
+  <div class="input-group">
+    <input type="text" id="signupName" placeholder="Full Name">
   </div>
-
-  <!-- Login Form -->
-  <div id="loginForm" class="hidden">
-    <h2>Login</h2>
-    <div class="input-group">
-      <input type="email" id="loginEmail" placeholder="Email">
-    </div>
-    <div class="input-group">
-      <input type="password" id="loginPassword" placeholder="Password">
-      <svg onclick="togglePassword('loginPassword', this)" class="eye-icon" viewBox="0 0 24 24">
-        <path d="M12 4.5C7 4.5 2.7 8.2 1 12c1.7 3.8 6 7.5 11 7.5s9.3-3.7 11-7.5c-1.7-3.8-6-7.5-11-7.5zm0 13c-3.3 0-6-2.7-6-6s2.7-6 6-6
-                 6 2.7 6 6-2.7 6-6 6zm0-10a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/>
-      </svg>
-    </div>
-    <button onclick="handleLogin()">Login</button>
-    <div class="toggle-link" onclick="toggleForm()">Don't have an account? Sign Up</div>
+  <div class="input-group">
+    <input type="email" id="signupEmail" placeholder="Email">
   </div>
+  <div class="input-group">
+    <input type="password" id="signupPassword" placeholder="Password">
+    <svg onclick="togglePassword('signupPassword', this)" class="eye-icon" viewBox="0 0 24 24">
+      <path d="M12 4.5C7 4.5 2.7 8.2 1 12c1.7 3.8 6 7.5 11 7.5s9.3-3.7 11-7.5c-1.7-3.8-6-7.5-11-7.5zm0 13c-3.3 0-6-2.7-6-6s2.7-6 6-6
+               6 2.7 6 6-2.7 6-6 6zm0-10a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"/>
+    </svg>
+  </div>
+  <button onclick="handleSignup()">Sign Up</button>
+  <div class="toggle-link">Already have an account? <a href="/login">Login</a></div>
 </div>
 
 <script>
   const BASE_URL = 'http://127.0.0.1:8000';
-
-  function toggleForm() {
-    document.getElementById('signupForm').classList.toggle('hidden');
-    document.getElementById('loginForm').classList.toggle('hidden');
-  }
 
   function togglePassword(inputId, icon) {
     const input = document.getElementById(inputId);
@@ -168,7 +131,7 @@
     const password = document.getElementById('signupPassword').value;
 
     try {
-      const res = await fetch(`${BASE_URL}/user/sign_up`, {
+      const res = await fetch(`${BASE_URL}/api/user/sign_up`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password })
@@ -178,8 +141,6 @@
       if (data?.data?.auth_token) {
         localStorage.setItem('authtoken', data.data.auth_token);
         alert('Signup successful!');
-
-        // Clear form fields after successful signup
         document.getElementById('signupName').value = '';
         document.getElementById('signupEmail').value = '';
         document.getElementById('signupPassword').value = '';
@@ -188,30 +149,6 @@
       }
     } catch (err) {
       alert('Error during signup!');
-      console.error(err);
-    }
-  }
-
-  async function handleLogin() {
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-
-    try {
-      const res = await fetch(`${BASE_URL}/user/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await res.json();
-      if (data?.data?.auth_token) {
-        localStorage.setItem('authtoken', data.data.auth_token);
-        alert('Login successful!');
-      } else {
-        alert(data?.message || 'Login failed!');
-      }
-    } catch (err) {
-      alert('Error during login!');
       console.error(err);
     }
   }
