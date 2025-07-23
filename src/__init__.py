@@ -11,8 +11,7 @@ from flask_migrate import Migrate
 
 os.makedirs('temp', exist_ok=True)
 log = get_logger(__name__)
-app = Flask(__name__)
-# app = Flask(__name__, template_folder=os.path.join(os.getcwd(), "src", 'templates'))
+app = Flask(__name__, template_folder=os.path.join(os.getcwd(), 'frontend_src'))
 
 
 mysql_local_base = settings.DB_BASE_URL

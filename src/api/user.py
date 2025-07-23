@@ -1,5 +1,5 @@
 import datetime
-from flask import Blueprint
+from flask import Blueprint, render_template
 from flask import request, jsonify
 from src.api.response_utils import send_response
 from src.bl.action_result import ActionResult, ResultCode
@@ -77,3 +77,8 @@ def login():
     except Exception as ex:
         log.exception(f"Request failed. Reason: Exception: {ex}, request_id: {req_id}.")
         return jsonify({"success": False, "message": "Internal server error.", "request_id": req_id}), 500
+
+
+@user_blueprint.route("/on_boarding", methods=["GET"])
+def front_end_on_boarding():
+    return render_template("on_boarding.html")
