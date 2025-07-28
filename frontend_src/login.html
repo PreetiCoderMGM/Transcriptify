@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Transcriptify - Login</title>
   <style>
-    /* Same styles as in signup.html */
     * { box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -138,6 +137,7 @@
       if (data?.data?.auth_token) {
         localStorage.setItem('authtoken', data.data.auth_token);
         alert('Login successful!');
+        window.location.href = 'http://127.0.0.1:8000/get_all_jobs';  // ✅ redirect added here
       } else {
         alert(data?.message || 'Login failed!');
       }

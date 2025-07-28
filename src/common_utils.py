@@ -390,3 +390,9 @@ def mask_email(email):
     else:
         masked_local = local_part[0] + '*' * (len(local_part) - 1)
     return f"{masked_local}@{domain}"
+
+
+def get_job_file_name(user_id: int, ext: str):
+    return f"{user_id}_{get_uid()}.{ext}"
+
+

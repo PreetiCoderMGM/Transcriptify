@@ -93,6 +93,7 @@ secrets.env
 .env.*
 
 # Temporary files
+static/
 temp/
 migrations/
 log/

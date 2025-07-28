@@ -47,4 +47,6 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 from .db import *
 from src.api.user import user_blueprint
+from src.api.jobs import job_blueprint
 app.register_blueprint(user_blueprint)
+app.register_blueprint(job_blueprint)
