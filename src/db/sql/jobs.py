@@ -51,5 +51,18 @@ class Job(db.Model):
     def get_jobs_by_user_id(user_id: int):
         return Job.query.filter_by(user_id=user_id).order_by(Job.created_on.desc()).all()
 
+    @staticmethod
+    def get_oldest_pending():
+        try:
+            job: Job = Job.query.filter(Job.status == JobStatus.NotStarted.value).order_by(Job.created_on.asc()).first()
+            if job:
+                job.status = JobStatus.Processing.value
+                db.session.commit()
+            return job
+        except Exception as ex:
+            db.session.rollback()
+            log.exception(f"Got exception whole getting job: {ex}")
+            return None
+
 
 
