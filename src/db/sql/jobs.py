@@ -64,5 +64,6 @@ class Job(db.Model):
             log.exception(f"Got exception whole getting job: {ex}")
             return None
 
-
-
+    @staticmethod
+    def get_job_by_id(job_id: int):
+        return Job.query.filter_by(id=job_id).first()
