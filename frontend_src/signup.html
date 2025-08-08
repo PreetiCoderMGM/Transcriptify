@@ -144,6 +144,7 @@
         document.getElementById('signupName').value = '';
         document.getElementById('signupEmail').value = '';
         document.getElementById('signupPassword').value = '';
+        window.location.href = 'http://127.0.0.1:8000/login'; // Redirect after success
       } else {
         alert(data?.message || 'Signup failed!');
       }

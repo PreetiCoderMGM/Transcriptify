@@ -87,3 +87,8 @@ def front_end_signup():
 @user_blueprint.route("/login", methods=["GET"])
 def front_end_login():
     return render_template("login.html")
+
+
+@user_blueprint.route("/", methods=["GET"])
+def front_end_home():
+    return render_template("home.html")
