@@ -49,7 +49,10 @@ def add_job(auth_payload: AuthPayload):
         filename = secure_filename(file.filename)
         file_ext = filename.rsplit('.', 1)[1].lower()
         if '.' not in filename or file_ext not in settings.SUPPORTED_MEDIA_TYPE:
-            res: ActionResult = ActionResult(ResultCode.InvalidDataOrArgument, message="Invalid file type",
+            error = f"Invalid file type, required file extension should be one of: {settings.SUPPORTED_MEDIA_TYPE} " \
+                    f"give extension is: {file_ext}"
+            log.error(error)
+            res: ActionResult = ActionResult(ResultCode.InvalidDataOrArgument, message=error,
                                              req_id=auth_payload.get_req_id(), http_res_status=400)
             return send_response(res)
 
