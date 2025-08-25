@@ -10,6 +10,7 @@ from src.bl.auth import get_login_res, AuthPayload
 from src.common_utils import mask_email, get_job_file_name
 from src.db.sql.user import User
 from src import db, Job, JobType, JobStatus
+from src.nlp import query_transcription
 from src.utils import get_uid
 from logger_util import get_logger
 from flask import request, jsonify
@@ -127,6 +128,48 @@ def get_job_transcription(auth_payload: AuthPayload, job_id: int):
         with open(file_path, "r", encoding="utf-8") as f:
             transcription = f.read()
         data = {"transcription": transcription}
+        res: ActionResult = ActionResult(data=data, code=ResultCode.Ok, req_id=auth_payload.get_req_id(),
+                                         http_res_status=200)
+        return send_response(res)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@job_blueprint.route('/api/job/<int:job_id>/get_job_summary', methods=['GET'])
+@login_required
+def get_job_summary(auth_payload: AuthPayload, job_id: int):
+    try:
+        job: Job = Job.get_job_by_id(job_id)
+        if not job:
+            error = f"Job not available with job id: {job_id}."
+            log.error(error)
+            res: ActionResult = ActionResult(ResultCode.InvalidDataOrArgument, message=error,
+                                             req_id=auth_payload.get_req_id(), http_res_status=404)
+            return send_response(res)
+        if job.user_id != auth_payload.user_id:
+            error = f"This Job dose not belongs to you, job id: {job_id}."
+            log.error(error)
+            res: ActionResult = ActionResult(ResultCode.AuthorizationError, message=error,
+                                             req_id=auth_payload.get_req_id(), http_res_status=403)
+            return send_response(res)
+        if job.status != JobStatus.Completed.value:
+            error = f"Job status for job id: {job_id} is not {JobStatus.Completed.value} current status: {job.status}."
+            log.error(error)
+            res: ActionResult = ActionResult(ResultCode.CurrentlyUnableToProcess, message=error,
+                                             req_id=auth_payload.get_req_id(), http_res_status=409)
+            return send_response(res)
+        filename = job.file_name.split(".")[0] + ".txt"
+        file_path = os.path.join("static", filename)
+        if not os.path.exists:
+            error = f"File not available with file id: {file_path}."
+            log.error(error)
+            res: ActionResult = ActionResult(ResultCode.InvalidDataOrArgument, message=error,
+                                             req_id=auth_payload.get_req_id(), http_res_status=404)
+            return send_response(res)
+        with open(file_path, "r", encoding="utf-8") as f:
+            transcription = f.read()
+        summary = query_transcription(transcription=transcription, req_id=auth_payload.get_req_id())
+        data = {"summary": summary}
         res: ActionResult = ActionResult(data=data, code=ResultCode.Ok, req_id=auth_payload.get_req_id(),
                                          http_res_status=200)
         return send_response(res)
