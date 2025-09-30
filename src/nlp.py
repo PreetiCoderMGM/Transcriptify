@@ -23,7 +23,7 @@ def query_transcription(transcription: str, question="For the below transcriptio
     try:
         prompt = f"Question: \n\n{question}\n\nTranscription:\n\n{transcription}"
         # Call Gemini 1.5 Flash (free tier friendly)
-        response = client.models.generate_content(model="gemini-1.5-flash", contents=prompt,
+        response = client.models.generate_content(model="gemini-flash-latest", contents=prompt,
                                                   config=types.GenerateContentConfig(max_output_tokens=20000,
                                                                                      temperature=0.9,
                                                                                      system_instruction=system_prompt))
